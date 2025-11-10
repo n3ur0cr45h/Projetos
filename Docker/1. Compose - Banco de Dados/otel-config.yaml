@@ -1,0 +1,24 @@
+receivers:
+  sqlserver:
+    collection_interval: 5s
+    username: sa
+    password: Admin!docker123D
+    server: sqlserver
+    port: 1433
+    resource_attributes:
+      sqlserver.computer.name:
+        enabled: true 
+      sqlserver.instance.name: 
+        enabled: true 
+  oracledb:
+    datasource: "oracle://pdbadmin:Admin!docker123D@oracle:1521/ORCLPDB1"
+        
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889" 
+
+service:
+  pipelines:
+    metrics:
+      receivers: [sqlserver, oracledb]
+      exporters: [prometheus]
