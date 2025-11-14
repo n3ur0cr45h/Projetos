@@ -5,20 +5,76 @@ receivers:
     password: Admin!docker123D
     server: sqlserver
     port: 1433
+
     resource_attributes:
       sqlserver.computer.name:
-        enabled: true 
-      sqlserver.instance.name: 
-        enabled: true 
-  oracledb:
-    datasource: "oracle://pdbadmin:Admin!docker123D@oracle:1521/ORCLPDB1"
-        
+        enabled: true
+      sqlserver.instance.name:
+        enabled: true
+      host.name:
+        enabled: true
+      service.instance.id:
+        enabled: true
+      sqlserver.database.name:
+        enabled: true
+
+    events:
+      db.server.query_sample:
+        enabled: true
+      db.server.top_query:
+        enabled: true
+
+    query_sample_collection:
+      max_rows_per_query: 100
+
+    top_query_collection:
+      lookback_time: 1800s
+      top_query_count: 50
+      collection_interval: 1800s
+
+    metrics:
+      sqlserver.batch.request.rate:
+        enabled: true
+      sqlserver.page.life_expectancy:
+        enabled: true
+      sqlserver.transaction_log.growth.count:
+        enabled: true
+      sqlserver.transaction_log.usage:
+        enabled: true
+      sqlserver.user.connection.count:
+        enabled: true
+      sqlserver.database.latency:
+        enabled: true
+      sqlserver.database.tempdb.space:
+        enabled: true
+      sqlserver.deadlock.rate:
+        enabled: true
+      sqlserver.memory.grants.pending.count:
+        enabled: true
+      sqlserver.processes.blocked:
+        enabled: true
+
+processors:
+  batch:
+    timeout: 10s
+    send_batch_size: 512
+    send_batch_max_size: 1024
+
 exporters:
   prometheus:
-    endpoint: "0.0.0.0:8889" 
+    endpoint: "0.0.0.0:8889"
+
+  otlphttp:
+    endpoint: "http://loki:3100/otlp"
 
 service:
   pipelines:
     metrics:
-      receivers: [sqlserver, oracledb]
+      receivers: [sqlserver]
+      processors: [batch]
       exporters: [prometheus]
+
+    logs:
+      receivers: [sqlserver]
+      processors: [batch]
+      exporters: [otlphttp]
