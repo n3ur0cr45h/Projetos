@@ -30,11 +30,10 @@ storage_config:
   tsdb_shipper:
     active_index_directory: /loki/index
     cache_location: /loki/cache
-    # note: para filesystem “shared_store” não é mais usado dessa forma
-
+    
 limits_config:
   allow_structured_metadata: true
-  # adicione mais limites conforme necessário
+
 
 ingester:
   chunk_idle_period: 5m
@@ -43,4 +42,3 @@ ingester:
 querier:
   max_concurrent: 20
 
-# Outros blocos opcionais aqui…
