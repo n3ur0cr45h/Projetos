@@ -77,6 +77,22 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin@2025
+      
+  loki:
+    image: grafana/loki:3.5
+    container_name: loki
+    ports:
+      - 3100:3100
+    command: -config.file=/etc/loki/config/config.yml
+    volumes:
+      - ./loki-config.yaml:/etc/loki/config/config.yml
+    networks:
+      - observability
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      oracle:
+        condition: service_healthy 
 
 networks:
   observability:
