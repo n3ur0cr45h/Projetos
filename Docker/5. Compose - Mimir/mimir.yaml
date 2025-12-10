@@ -1,19 +1,31 @@
+server:
+  http_listen_port: 9009
+
+target: all
 multitenancy_enabled: false
+
+limits:
+  max_label_names_per_series: 100
+
+ingester:
+  ring:
+    replication_factor: 1
+
+distributor:
+  ring:
+    instance_addr: 127.0.0.1
 
 blocks_storage:
   backend: filesystem
   filesystem:
-    dir: /data/blocks
+    dir: /tmp/mimir/blocks
 
 ruler_storage:
   backend: filesystem
   filesystem:
-    dir: /data/rules
+    dir: /tmp/mimir/rules
 
-server:
-  http_listen_port: 9009
-
-ingester:
-  ring:
-    kvstore:
-      store: inmemory
+alertmanager_storage:
+  backend: filesystem
+  filesystem:
+    dir: /tmp/mimir/alerts
