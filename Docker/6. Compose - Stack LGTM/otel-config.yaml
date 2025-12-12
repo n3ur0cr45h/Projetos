@@ -1,0 +1,20 @@
+receivers:
+  apache:
+    endpoint: "http://web:80/server-status?auto"
+  otlp:
+    protocols:
+      grpc:
+      http:
+        
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889" 
+    
+  otlp/tempo:
+    endpoint: tempo:4317
+
+service:
+  pipelines:
+    metrics:
+      receivers: [apache, otlp]
+      exporters: [prometheus, otlp/tempo]

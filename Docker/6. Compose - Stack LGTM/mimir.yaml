@@ -1,0 +1,31 @@
+multitenancy_enabled: false
+
+limits:
+  max_label_names_per_series: 300
+  ingestion_rate: 50000
+  ingestion_burst_size: 50000
+
+server:
+  http_listen_port: 9009
+
+memberlist:
+  join_members:
+    - mimir:7946
+
+common:
+  storage:
+    backend: filesystem
+    filesystem:
+      dir: /data
+
+blocks_storage:
+  backend: filesystem
+  filesystem:
+    dir: /data/blocks
+
+compactor:
+  data_dir: /data/compactor
+
+ingester:
+  ring:
+    replication_factor: 1
